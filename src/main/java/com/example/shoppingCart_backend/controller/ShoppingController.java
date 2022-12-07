@@ -1,50 +1,42 @@
 package com.example.shoppingCart_backend.controller;
 
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.shoppingCart_backend.dao.ProductDao;
+import com.example.shoppingCart_backend.dao.UserDao;
+import com.example.shoppingCart_backend.model.Products;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ShoppingController {
+    @Autowired
+    private ProductDao dao;
 
     @CrossOrigin(origins = "*")
-    @PostMapping(path = "/add",consumes = "application/json",produces = "application/json")
-    public String addProduct(){
+    @PostMapping(path = "/addproduct",consumes = "application/json",produces = "application/json")
+    public String AddProduct(@RequestBody Products p){
+        System.out.println(p.getProductName().toString());
+        dao.save(p);
         return "Product added Successfully";
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(path = "/viewproduct",consumes = "application/json",produces = "application/json")
-    public String viewProduct(){
-        return "view";
+    @GetMapping(path = "/viewProduct",consumes ="application/json",produces = "application/json" )
+    public List<Products> ViewAll(){
+        return (List<Products>) dao.findAll();
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping(path = "/serachproduct",consumes = "application/json",produces = "application/json")
-    public String searchProduct(){
-        return "searchproduct";
+    @PostMapping(path = "/search",consumes = "application/json",produces = "application/json")
+    public List<Products> SearchProduct(@RequestBody Products p)
+    {
+        String product_name =String.valueOf(p.getProductName());
+        System.out.println(product_name);
+        return ((List<Products>) dao.SearchProduct(p.getProductName()));
     }
 
-
-    @CrossOrigin(origins = "*")
-    @PostMapping(path = "/usersignup",consumes = "application/json",produces = "application/json")
-    public String userSignup(){
-        return "User added Successfully";
-    }
-
-    @CrossOrigin(origins = "*")
-    @PostMapping(path = "/userlogin",consumes = "application/json",produces = "application/json")
-    public String userLogin() {
-        return "user login";
-    }
-
-    @CrossOrigin(origins = "*")
-    @PostMapping(path = "/adminlogin",consumes = "application/json",produces = "application/json")
-    public String adminLogin() {
-        return "admin login";
-    }
 
 
 
